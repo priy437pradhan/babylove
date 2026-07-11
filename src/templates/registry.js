@@ -10,7 +10,7 @@ import MarriageFloral from './marriage/Floral'
 import MarriageRoyal from './marriage/Royal' 
 import BirthdayVibrant from './birthday/Vibrant'
 import MarriageScratch from './marriage/Scratch'
-import MarriageBlossom from './marriage/Blossom'
+
 import MarriageChapel from './marriage/Chapel'
 import MarriageNikah from './marriage/Nikah'
 import MarriageEnvelope from './marriage/Envelope'
@@ -21,7 +21,7 @@ export const TEMPLATE_REGISTRY = {
     floral: MarriageFloral,
         royal: MarriageRoyal,  
          scratch: MarriageScratch,
-         blossom: MarriageBlossom,
+       
          chapel:  MarriageChapel,
          nikah: MarriageNikah,
          envelope: MarriageEnvelope,
