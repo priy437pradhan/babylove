@@ -52,6 +52,13 @@ export const TEMPLATES = {
       price: 499,
       palette: ['#FDFBF7', '#C97B84', '#7C8F6E'],
     },
+    {
+      key: 'royal',
+      name: 'Royal',
+      description: 'Deep emerald and peacock gold, diamond frames, regal feel',
+      price: 599,
+      palette: ['#0E3B33', '#D4AF6A', '#2E8BA8'],
+    },
   ],
   birthday: [
     {
