@@ -3,7 +3,7 @@
 // fallback, a countdown hook, an ornament divider, and the
 // custom-HTML block for `blank_html`.
 // ============================================================
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { parseEventDate, findMainEvent } from '../../utils/date'
 
 /** Image that falls back to an initial tile when the URL fails/is empty. */
@@ -90,4 +90,110 @@ export function splitParticipants(participants = []) {
     second: byRole('bride') || participants[1] || null,
     all: participants,
   }
+}
+
+/** Component that reveals its children when scrolled into view */
+export function Reveal({ as: Tag = 'div', className = '', delay = '', children, ...rest }) {
+  const ref = useRef(null)
+  const [inView, setInView] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    if (typeof IntersectionObserver === 'undefined') {
+      setInView(true)
+      return
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            setInView(true)
+            io.unobserve(e.target)
+          }
+        })
+      },
+      { threshold: 0.18 }
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
+  return (
+    <Tag ref={ref} className={`tpl-reveal ${delay} ${inView ? 'in' : ''} ${className}`} {...rest}>
+      {children}
+    </Tag>
+  )
+}
+
+/** Hook to manage background audio music playback */
+export function useMusicToggle(musicUrl) {
+  const [playing, setPlaying] = useState(false)
+  const audioRef = useRef(null)
+
+  useEffect(() => {
+    if (!musicUrl) return
+
+    audioRef.current = new Audio(musicUrl)
+    audioRef.current.loop = true
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current = null
+      }
+      setPlaying(false)
+    }
+  }, [musicUrl])
+
+  const play = () => {
+    if (audioRef.current && !playing) {
+      audioRef.current.play()
+        .then(() => setPlaying(true))
+        .catch(err => console.log("Audio play blocked/failed:", err))
+    }
+  }
+
+  const toggle = () => {
+    if (!audioRef.current) return
+    if (playing) {
+      audioRef.current.pause()
+      setPlaying(false)
+    } else {
+      audioRef.current.play()
+        .then(() => setPlaying(true))
+        .catch(err => console.log("Audio play blocked/failed:", err))
+    }
+  }
+
+  return {
+    hasMusic: !!musicUrl,
+    playing,
+    play,
+    toggle,
+  }
+}
+
+/** Audio play/pause button component */
+export function MusicButton({ hasMusic, playing, onToggle, className = '' }) {
+  if (!hasMusic) return null
+
+  return (
+    <button
+      type="button"
+      className={`${className} ${playing ? 'is-playing' : ''}`}
+      onClick={onToggle}
+      aria-label={playing ? "Mute music" : "Play music"}
+    >
+      {playing ? (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+        </svg>
+      ) : (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.6 }}>
+          <path d="M4.27 3L3 4.27l9 9v.28c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4v-1.73l6 6L21 20l-9-9L4.27 3zM14 7h4V3h-6v5.18l2 2V7z" />
+        </svg>
+      )}
+    </button>
+  )
 }
