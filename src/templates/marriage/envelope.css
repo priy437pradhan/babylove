@@ -1,0 +1,125 @@
+/* Marriage / Envelope — soft blue, sealed envelope opener, scroll-snap sections */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Jost:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+
+.t-env {
+  --ten-bg: #f4f7fb; --ten-panel: #fff; --ten-deep: #33475F; --ten-accent: #8FA3BB;
+  --ten-accent-soft: #C9D5E3; --ten-ink: #2C3644; --ten-muted: #66748A; --ten-line: rgba(143,163,187,.4);
+  --ten-ribbon: #C8D3E0; --ten-ribbon-deep: #8FA3BB;
+  position: relative; font-family: 'Jost', sans-serif; font-weight: 300; color: var(--ten-ink);
+  background: linear-gradient(180deg, #fdfeff, #eef3f9); overflow-x: hidden; min-height: 100%;
+}
+.t-env * { box-sizing: border-box; }
+.t-env .ten-wrap { max-width: 760px; margin: 0 auto; padding: 0 22px; width: 100%; }
+.t-env .ten-script { font-family: 'Great Vibes', cursive; }
+.t-env .ten-snap { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: 30px 0; text-align: center; }
+
+/* envelope opener */
+.t-env .ten-gift {
+  position: absolute; inset: 0; z-index: 30; cursor: pointer; overflow: hidden;
+  background: linear-gradient(160deg, #dfe8f2, #b8c8da); transition: opacity .55s ease;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; padding: 24px; text-align: center;
+}
+.t-env .ten-gift.is-gone { opacity: 0; pointer-events: none; }
+.t-env .ten-who-wrap { color: #33475f; }
+.t-env .ten-who { font-family: 'Great Vibes', cursive; font-size: clamp(2rem, 9vw, 3rem); line-height: 1.2; }
+.t-env .ten-what { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1rem; opacity: .85; margin-top: 2px; }
+.t-env .ten-hint { font-weight: 500; font-size: .66rem; letter-spacing: .4em; text-transform: uppercase; color: #33475f; opacity: .9; animation: tenBob 1.9s ease-in-out infinite; }
+@keyframes tenBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+.t-env .ten-env { position: relative; width: min(80vw, 340px); aspect-ratio: 10/7; filter: drop-shadow(0 26px 44px rgba(0,0,0,.3)); }
+.t-env .ten-back { position: absolute; inset: 0; border-radius: 12px; background: var(--ten-ribbon-deep); }
+.t-env .ten-card {
+  position: absolute; left: 5%; right: 5%; top: 6%; bottom: 9%; z-index: 2; background: var(--ten-panel); border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.18); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 10px;
+  transition: transform 1s cubic-bezier(.3,1.25,.45,1);
+}
+.t-env .ten-c-eyebrow { font-weight: 500; font-size: .56rem; letter-spacing: .34em; text-transform: uppercase; color: var(--ten-accent); }
+.t-env .ten-c-names { font-family: 'Great Vibes', cursive; font-size: clamp(1.5rem, 7vw, 2rem); color: var(--ten-deep); line-height: 1.2; }
+.t-env .ten-c-sub { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: .86rem; color: var(--ten-muted); }
+.t-env .ten-env.is-open .ten-card { transform: translateY(-88%); }
+.t-env .ten-pocket {
+  position: absolute; inset: 0; z-index: 3; border-radius: 12px;
+  background: linear-gradient(180deg, var(--ten-ribbon) 0%, var(--ten-ribbon-deep) 115%);
+  clip-path: polygon(0 0, 50% 46%, 100% 0, 100% 100%, 0 100%);
+}
+.t-env .ten-flap {
+  position: absolute; left: 0; right: 0; top: 0; height: 52%; z-index: 5; transform-origin: top center;
+  backface-visibility: hidden; clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background: linear-gradient(180deg, var(--ten-ribbon-deep) 0%, var(--ten-ribbon) 90%);
+  transition: transform 1s cubic-bezier(.6,0,.3,1);
+}
+.t-env .ten-env.is-open .ten-flap { transform: rotateX(180deg); }
+.t-env .ten-seal {
+  position: absolute; left: 50%; top: 52%; z-index: 6; width: 60px; height: 60px; transform: translate(-50%,-50%); border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, var(--ten-ribbon), var(--ten-ribbon-deep) 70%);
+  box-shadow: 0 5px 14px rgba(0,0,0,.3), inset 0 0 0 3px rgba(255,255,255,.28);
+  display: flex; align-items: center; justify-content: center; color: #fff; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1.05rem;
+  animation: tenSealPulse 2.2s ease-in-out infinite; transition: transform .5s ease, opacity .5s ease;
+}
+@keyframes tenSealPulse { 0%, 100% { transform: translate(-50%,-50%) scale(1); } 50% { transform: translate(-50%,-50%) scale(1.06); } }
+.t-env .ten-env.is-open .ten-seal { animation: none; transform: translate(-50%,-50%) scale(1.3) rotate(-14deg); opacity: 0; }
+
+.t-env .ten-music-btn {
+  position: fixed; top: 16px; right: 16px; z-index: 60; width: 48px; height: 48px; border-radius: 50%;
+  border: 1px solid var(--ten-accent); background: var(--ten-panel); color: var(--ten-accent); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(0,0,0,.2);
+}
+.t-env .ten-music-btn.is-playing { animation: tenPulse 1.9s ease-in-out infinite; }
+@keyframes tenPulse { 0%, 100% { box-shadow: 0 6px 18px rgba(0,0,0,.2); } 50% { box-shadow: 0 0 0 7px rgba(143,163,187,.3); } }
+
+/* hero */
+.t-env .ten-hero { background: linear-gradient(180deg, #eef3f9, #dde7f1); border-bottom: 1px solid var(--ten-line); }
+.t-env .ten-greet { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.06rem; color: #4c5c72; }
+.t-env .ten-families { font-size: .92rem; color: #4c5c72; opacity: .8; margin-top: 8px; }
+.t-env .ten-frame { position: relative; width: min(62vw, 272px); margin: 20px auto 0; }
+.t-env .ten-frame-img, .t-env .ten-frame-fallback {
+  width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block; border-radius: 140px 140px 22px 22px;
+  border: 3px solid var(--ten-accent); box-shadow: 0 0 0 9px rgba(255,255,255,.75), 0 22px 50px rgba(0,0,0,.26);
+}
+.t-env .ten-frame-fallback { display: flex; align-items: center; justify-content: center; background: linear-gradient(160deg, #eef3f9, var(--ten-accent-soft)); font-family: 'Great Vibes', cursive; font-size: 42px; color: var(--ten-deep); }
+.t-env .ten-names { font-family: 'Great Vibes', cursive; font-size: clamp(2.5rem, 11vw, 3.7rem); line-height: 1.1; color: #33475f; margin-top: 22px; }
+.t-env .ten-amp { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--ten-accent); font-size: .42em; display: block; margin: -4px 0; }
+.t-env .ten-date-line { margin-top: 12px; font-weight: 500; font-size: .76rem; letter-spacing: .32em; text-transform: uppercase; color: var(--ten-accent); }
+.t-env .ten-venue-line { margin-top: 5px; font-family: 'Cormorant Garamond', serif; font-style: italic; color: #4c5c72; opacity: .85; font-size: 1rem; }
+
+.t-env .ten-eyebrow { font-weight: 500; font-size: .64rem; letter-spacing: .42em; text-transform: uppercase; color: var(--ten-accent); margin-bottom: .8rem; }
+.t-env .ten-h2 { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1.95rem; color: var(--ten-deep); margin-bottom: .25rem; }
+.t-env .ten-h2 .ten-script { display: block; font-weight: 400; font-size: 1.6rem; color: var(--ten-accent); margin-bottom: 2px; }
+.t-env .ten-verse { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.22rem; max-width: 540px; margin: 18px auto 0; line-height: 1.7; }
+.t-env .ten-hashtag { margin-top: 18px; font-family: 'Great Vibes', cursive; font-size: 1.6rem; color: var(--ten-accent); }
+
+.t-env .ten-countdown { display: flex; justify-content: center; gap: 12px; margin-top: 26px; flex-wrap: wrap; }
+.t-env .ten-cd-box { background: var(--ten-panel); color: var(--ten-deep); border-radius: 15px; padding: 16px 12px; min-width: 76px; border: 1px solid var(--ten-line); box-shadow: 0 10px 22px rgba(0,0,0,.12); }
+.t-env .ten-cd-box b { display: block; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1.8rem; line-height: 1.05; }
+.t-env .ten-cd-box small { font-weight: 500; font-size: .56rem; letter-spacing: .28em; text-transform: uppercase; display: block; margin-top: 5px; color: var(--ten-accent); }
+.t-env .ten-dc-sub { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.4rem; color: var(--ten-deep); }
+
+.t-env .ten-events { display: grid; gap: 12px; margin-top: 24px; text-align: left; }
+.t-env .ten-ev { background: var(--ten-panel); border-radius: 15px; padding: 16px 20px; border: 1px solid var(--ten-line); border-left: 4px solid var(--ten-accent); box-shadow: 0 10px 22px rgba(0,0,0,.09); }
+.t-env .ten-ev:nth-child(2) { border-left-color: var(--ten-deep); }
+.t-env .ten-ev h3 { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1.25rem; color: var(--ten-deep); }
+.t-env .ten-ev p { color: var(--ten-muted); margin-top: 3px; font-size: .9rem; line-height: 1.5; }
+.t-env .ten-when { color: var(--ten-accent); font-weight: 500; font-size: .64rem; letter-spacing: .2em; text-transform: uppercase; margin-top: 8px; display: block; }
+.t-env .ten-maplink {
+  display: inline-block; margin-top: 14px; font-weight: 500; font-size: .66rem; letter-spacing: .24em; text-transform: uppercase;
+  color: #fff; background: linear-gradient(135deg, var(--ten-accent), var(--ten-deep)); padding: 14px 32px; border-radius: 40px;
+  text-decoration: none; box-shadow: 0 10px 24px rgba(0,0,0,.2);
+}
+
+.t-env .ten-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px; }
+.t-env .ten-gallery-img, .t-env .ten-gallery-fallback { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; border-radius: 12px; border: 4px solid var(--ten-panel); box-shadow: 0 10px 24px rgba(0,0,0,.15); }
+.t-env .ten-gallery-fallback { display: flex; align-items: center; justify-content: center; background: var(--ten-accent-soft); font-family: 'Great Vibes', cursive; font-size: 32px; color: var(--ten-deep); }
+
+.t-env .ten-custom { max-width: 540px; margin: 0 auto; color: var(--ten-muted); line-height: 1.7; }
+
+.t-env .ten-foot { background: linear-gradient(180deg, transparent, #dde7f1); color: #4c5c72; }
+.t-env .ten-script-f { font-family: 'Great Vibes', cursive; font-size: 2rem; color: var(--ten-accent); display: block; margin-bottom: 4px; }
+.t-env .ten-names-f { font-family: 'Cormorant Garamond', serif; font-size: 1.08rem; }
+
+.t-env .tpl-reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
+.t-env .tpl-reveal.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .t-env .ten-hint, .t-env .ten-seal, .t-env .ten-music-btn.is-playing { animation: none !important; }
+  .t-env .tpl-reveal { transition: none; opacity: 1; transform: none; }
+}
