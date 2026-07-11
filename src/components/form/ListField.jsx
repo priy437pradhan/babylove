@@ -1,13 +1,17 @@
+import ImageInput from './ImageInput'
+ 
 /**
  * Repeatable group of fields — drives participants, family_members,
  * primary_image, other_image, when_where and messages. Fully generic:
  * pass `fields` config and it renders/updates the array in the payload.
+ * Field types: text (default), textarea, image (URL + device upload).
  */
 export default function ListField({
   title,
   subtitle,
+  labelExtra,
   items = [],
-  fields,            // [{ name, label, placeholder, suggestions?, textarea? }]
+  fields,            // [{ name, label, placeholder, suggestions?, textarea?, type? }]
   emptyItem,         // object used when adding a new row
   addLabel = 'Add another',
   minItems = 0,
@@ -20,16 +24,17 @@ export default function ListField({
   }
   const add = () => onChange([...items, { ...emptyItem }])
   const remove = (idx) => onChange(items.filter((_, i) => i !== idx))
-
-  const cols = fields.length === 2 ? 'cols-2' : fields.length >= 3 ? 'cols-3' : ''
-
+ 
+  const hasImage = fields.some(f => f.type === 'image')
+  const cols = hasImage ? '' : fields.length === 2 ? 'cols-2' : fields.length >= 3 ? 'cols-3' : ''
+ 
   return (
     <div className="form-section">
       <div className="form-section-head">
-        <h2 className="form-section-title">{title}</h2>
+        <h2 className="form-section-title">{title}{labelExtra}</h2>
         {subtitle && <span className="form-section-sub">{subtitle}</span>}
       </div>
-
+ 
       {items.map((item, idx) => (
         <div className="list-item" key={idx}>
           {items.length > minItems && (
@@ -47,7 +52,13 @@ export default function ListField({
               return (
                 <div className="field" key={f.name}>
                   <label htmlFor={inputId}>{f.label}</label>
-                  {f.textarea ? (
+                  {f.type === 'image' ? (
+                    <ImageInput
+                      id={inputId}
+                      value={item[f.name] || ''}
+                      onChange={v => update(idx, f.name, v)}
+                    />
+                  ) : f.textarea ? (
                     <textarea
                       id={inputId}
                       value={item[f.name] || ''}
@@ -74,7 +85,7 @@ export default function ListField({
           </div>
         </div>
       ))}
-
+ 
       <button type="button" className="add-item" onClick={add}>+ {addLabel}</button>
     </div>
   )
