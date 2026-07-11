@@ -13,6 +13,7 @@ import MarriageScratch from './marriage/Scratch'
 import MarriageBlossom from './marriage/Blossom'
 import MarriageChapel from './marriage/Chapel'
 import MarriageNikah from './marriage/Nikah'
+import MarriageEnvelope from './marriage/Envelope'
 
 export const TEMPLATE_REGISTRY = {
   marriage: {
@@ -22,7 +23,8 @@ export const TEMPLATE_REGISTRY = {
          scratch: MarriageScratch,
          blossom: MarriageBlossom,
          chapel:  MarriageChapel,
-         nikah: MarriageNikah
+         nikah: MarriageNikah,
+         envelope: MarriageEnvelope,
       
   },
   birthday: {
