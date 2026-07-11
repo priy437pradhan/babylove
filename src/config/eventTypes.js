@@ -59,6 +59,13 @@ export const TEMPLATES = {
       price: 599,
       palette: ['#0E3B33', '#D4AF6A', '#2E8BA8'],
     },
+      {
+      key: 'scratch',
+      name: 'Scratch & Reveal',
+      description: 'Maroon and gold, a scratch-card reveal with festive sparkle animations',
+      price: 599,
+      palette: ['#5A0E1C', '#D4AF37', '#FBF3E4'],
+    },
   ],
   birthday: [
     {

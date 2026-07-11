@@ -1,0 +1,137 @@
+/* Marriage / Scratch — gold foil scratch-card reveal, maroon & gold */
+@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Tangerine:wght@700&family=Mulish:wght@400;600;700&display=swap');
+
+.t-scr {
+  --ts-maroon: #5A0E1C;
+  --ts-maroon-2: #7A1528;
+  --ts-gold: #D4AF37;
+  --ts-gold-2: #F3D77A;
+  --ts-cream: #FBF3E4;
+  --ts-ink: #3A0A14;
+  --ts-script: 'Tangerine', cursive;
+  --ts-disp: 'Marcellus', serif;
+  --ts-body: 'Mulish', sans-serif;
+
+  position: relative;
+  font-family: var(--ts-body);
+  color: var(--ts-cream);
+  overflow-x: hidden;
+  background: radial-gradient(120% 60% at 50% 0%, var(--ts-maroon-2) 0%, var(--ts-maroon) 55%, #3E0812 100%);
+  min-height: 100%;
+}
+
+.t-scr *, .t-scr *::before, .t-scr *::after { box-sizing: border-box; }
+
+/* sparkles */
+.t-scr .tscr-sky { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.t-scr .tscr-spark { position: absolute; color: var(--ts-gold-2); opacity: 0; animation-name: tscrTwinkle; animation-timing-function: linear; animation-iteration-count: infinite; }
+@keyframes tscrTwinkle {
+  0% { transform: translateY(0) scale(.5); opacity: 0; }
+  15% { opacity: .9; }
+  85% { opacity: .5; }
+  100% { transform: translateY(-105vh) scale(1.1); opacity: 0; }
+}
+.t-scr .tscr-burst { position: fixed; pointer-events: none; z-index: 60; font-size: 20px; animation: tscrBurst .9s ease-out forwards; }
+@keyframes tscrBurst {
+  0% { transform: translate(0, 0) scale(.4); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(1.2); opacity: 0; }
+}
+
+.t-scr main { position: relative; z-index: 1; }
+.t-scr .tscr-section {
+  min-height: 100svh; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 64px 22px; text-align: center;
+}
+.t-scr .tscr-reveal { opacity: 0; transform: translateY(34px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1); }
+.t-scr .tscr-reveal.in { opacity: 1; transform: none; }
+.t-scr .tscr-d1 { transition-delay: .12s; }
+.t-scr .tscr-d2 { transition-delay: .24s; }
+.t-scr .tscr-d3 { transition-delay: .36s; }
+
+.t-scr .tscr-eyebrow { font-size: 12px; letter-spacing: .4em; text-transform: uppercase; color: var(--ts-gold); font-weight: 700; }
+.t-scr .tscr-h1, .t-scr .tscr-h2 { font-family: var(--ts-disp); font-weight: 400; color: var(--ts-gold-2); }
+.t-scr .tscr-h1 { font-size: clamp(30px, 7.4vw, 52px); letter-spacing: .04em; margin-top: 10px; }
+.t-scr .tscr-h2 { font-size: clamp(26px, 6.4vw, 42px); margin-top: 8px; }
+.t-scr .tscr-rule { width: 150px; height: 22px; margin: 14px auto 0; background: linear-gradient(90deg, transparent, var(--ts-gold), transparent) center / 100% 1px no-repeat; position: relative; }
+.t-scr .tscr-rule::after { content: "✦"; color: var(--ts-gold); position: absolute; left: 50%; top: -12px; transform: translateX(-50%); }
+.t-scr .tscr-lead { font-size: clamp(15px, 3.9vw, 18px); max-width: 36ch; margin: 16px auto 0; line-height: 1.7; color: #EFD9C2; }
+
+/* scratch card */
+.t-scr .tscr-scwrap {
+  position: relative; width: min(84vw, 360px); border-radius: 24px; margin: 26px auto 0;
+  padding: 12px; background: linear-gradient(160deg, #8C6A1F, var(--ts-gold), #8C6A1F);
+  box-shadow: 0 24px 60px rgba(0,0,0,.5), 0 0 0 1px var(--ts-gold-2);
+}
+.t-scr .tscr-scinner { position: relative; border-radius: 16px; overflow: hidden; background: var(--ts-cream); }
+.t-scr .tscr-under { padding: 22px 16px 18px; color: var(--ts-ink); }
+.t-scr .tscr-under-img, .t-scr .tscr-under-fallback { width: 78%; border-radius: 16px; margin: 0 auto; }
+.t-scr .tscr-under-fallback {
+  aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(160deg, #E9D4A3, #C9A24B); font-family: var(--ts-disp); font-size: 42px; color: var(--ts-maroon);
+}
+.t-scr .tscr-under-names { font-family: var(--ts-script); font-size: clamp(40px, 10vw, 64px); color: #7A1528; line-height: 1; margin-top: 8px; }
+.t-scr .tscr-under-date { font-family: var(--ts-disp); font-size: 16px; letter-spacing: .24em; margin-top: 6px; color: var(--ts-maroon); }
+.t-scr .tscr-foil { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: grab; transition: opacity .8s ease; }
+.t-scr .tscr-scwrap.done .tscr-foil { opacity: 0; pointer-events: none; }
+.t-scr .tscr-schint {
+  position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 3; pointer-events: none;
+  background: rgba(58,10,20,.85); color: var(--ts-gold-2); font-weight: 700; font-size: 13px; letter-spacing: .14em;
+  padding: 9px 18px; border-radius: 999px; text-transform: uppercase; animation: tscrHeartbeat 1.6s ease-in-out infinite; transition: opacity .5s;
+}
+.t-scr .tscr-scwrap.done .tscr-schint { opacity: 0; }
+@keyframes tscrHeartbeat {
+  0%, 100% { transform: translateX(-50%) scale(1); }
+  50% { transform: translateX(-50%) scale(1.07); }
+}
+
+/* generic gold card */
+.t-scr .tscr-card {
+  margin-top: 24px; background: rgba(251,243,228,.06); border: 1px solid rgba(212,175,55,.5); border-radius: 22px;
+  padding: 26px 30px; box-shadow: inset 0 0 40px rgba(212,175,55,.08);
+}
+.t-scr .tscr-card-big { font-family: var(--ts-disp); font-size: clamp(26px, 6.6vw, 38px); color: var(--ts-gold-2); }
+.t-scr .tscr-card-sub { font-size: 15px; margin-top: 6px; letter-spacing: .12em; color: #EFD9C2; }
+
+.t-scr .tscr-count { display: flex; gap: 10px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
+.t-scr .tscr-count div { border: 1px solid var(--ts-gold); border-radius: 14px; min-width: 70px; padding: 12px 8px; background: rgba(0,0,0,.22); }
+.t-scr .tscr-count b { display: block; font-size: 28px; color: var(--ts-gold-2); font-family: var(--ts-disp); line-height: 1; }
+.t-scr .tscr-count span { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: #D9BFA6; }
+
+.t-scr .tscr-timeline { margin-top: 30px; width: min(92vw, 420px); text-align: left; }
+.t-scr .tscr-event { display: flex; gap: 16px; position: relative; padding-bottom: 28px; }
+.t-scr .tscr-event:last-child { padding-bottom: 0; }
+.t-scr .tscr-event::before { content: ""; position: absolute; left: 22px; top: 50px; bottom: 2px; border-left: 1px solid rgba(212,175,55,.55); }
+.t-scr .tscr-event:last-child::before { display: none; }
+.t-scr .tscr-emoji {
+  width: 46px; height: 46px; flex: 0 0 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.28); border: 1px solid var(--ts-gold); font-size: 20px;
+}
+.t-scr .tscr-event b { display: block; font-family: var(--ts-disp); font-size: 17px; color: var(--ts-gold-2); letter-spacing: .06em; }
+.t-scr .tscr-event span { font-size: 13.5px; line-height: 1.55; color: #E7CDB4; }
+
+.t-scr .tscr-couple-img, .t-scr .tscr-couple-fallback {
+  width: min(72vw, 300px); border-radius: 22px; box-shadow: 0 20px 46px rgba(0,0,0,.5); border: 1px solid rgba(212,175,55,.6);
+}
+.t-scr .tscr-couple-fallback {
+  aspect-ratio: 4 / 5; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(160deg, #7A1528, #3E0812); font-family: var(--ts-disp); font-size: 44px; color: var(--ts-gold-2);
+}
+.t-scr .tscr-bob { animation: tscrBob 5s ease-in-out infinite; }
+@keyframes tscrBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+.t-scr .tscr-btnrow { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 26px; }
+.t-scr .tscr-btn { font-weight: 700; font-size: 15px; text-decoration: none; padding: 14px 26px; border-radius: 999px; display: inline-flex; gap: 8px; transition: transform .18s; }
+.t-scr .tscr-btn:active { transform: scale(.95); }
+.t-scr .tscr-btn-g { background: linear-gradient(135deg, var(--ts-gold-2), var(--ts-gold)); color: #3A0A14; box-shadow: 0 14px 30px rgba(212,175,55,.3); }
+.t-scr .tscr-btn-o { border: 1px solid var(--ts-gold); color: var(--ts-gold-2); }
+
+.t-scr .tscr-custom { max-width: 520px; margin: 0 auto; text-align: center; line-height: 1.7; color: #EFD9C2; }
+.t-scr .tscr-custom h1, .t-scr .tscr-custom h2 { font-family: var(--ts-disp); color: var(--ts-gold-2); margin-bottom: 8px; }
+
+.t-scr .tscr-footer { position: relative; z-index: 1; text-align: center; padding: 36px 20px 48px; color: #C9A98E; font-size: 13px; letter-spacing: .1em; }
+.t-scr .tscr-script { font-family: var(--ts-script); font-size: 52px; display: block; color: var(--ts-gold-2); }
+
+@media (prefers-reduced-motion: reduce) {
+  .t-scr .tscr-spark, .t-scr .tscr-bob, .t-scr .tscr-schint { animation: none !important; }
+  .t-scr .tscr-reveal { transition: none; opacity: 1; transform: none; }
+}
