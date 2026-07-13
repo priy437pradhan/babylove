@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { FiUploadCloud, FiImage, FiTrash2 } from 'react-icons/fi'
 import { compressImageFile } from '../../utils/image'
- 
+
 /**
  * Photo field: paste a URL OR upload from the device.
  * Uploads are compressed and stored as data URLs inside the payload
@@ -12,9 +12,9 @@ export default function ImageInput({ id, value = '', onChange, placeholder = 'ht
   const fileRef = useRef(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState(null)
- 
+
   const isUploaded = value.startsWith('data:')
- 
+
   const onFile = async (e) => {
     const file = e.target.files?.[0]
     e.target.value = ''
@@ -29,7 +29,7 @@ export default function ImageInput({ id, value = '', onChange, placeholder = 'ht
       setBusy(false)
     }
   }
- 
+
   return (
     <>
       <div className="image-input">

@@ -1,22 +1,24 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { FiEdit3 } from 'react-icons/fi'
+import { FiEdit3, FiExternalLink } from 'react-icons/fi'
 import { api } from '../api/client'
- 
+import { resolveTemplate } from '../templates/registry'
+import PreviewFrame from '../components/PreviewFrame'
+
 export default function Success() {
   const { eventUrl } = useParams()
   const [event, setEvent] = useState(null)
   const [copied, setCopied] = useState(false)
- 
+
   useEffect(() => {
     api.getEventByUrl(eventUrl).then(setEvent).catch(() => {})
   }, [eventUrl])
- 
+
   const fullLink = useMemo(
     () => `${window.location.origin}/invite/${eventUrl}`,
     [eventUrl]
   )
- 
+
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(fullLink)
@@ -24,11 +26,13 @@ export default function Success() {
       setTimeout(() => setCopied(false), 2000)
     } catch { /* clipboard unavailable */ }
   }
- 
+
   const waText = encodeURIComponent(
     `${event?.event_name || 'You are invited!'} — ${fullLink}`
   )
- 
+
+  const Tpl = event ? resolveTemplate(event.event_type_key, event.template_type_key) : null
+
   return (
     <main className="page page-narrow">
       <div className="success-hero">
@@ -38,14 +42,14 @@ export default function Success() {
         <p className="page-lede" style={{ margin: '10px auto 0' }}>
           Share this link with your guests — it opens beautifully on any phone.
         </p>
- 
+
         <div className="link-box">
           <code>{fullLink}</code>
           <button className="btn btn-primary btn-sm" onClick={copy}>
             {copied ? 'Copied ✓' : 'Copy'}
           </button>
         </div>
- 
+
         <div className="share-row">
           <a
             className="btn btn-gold"
@@ -56,12 +60,22 @@ export default function Success() {
             Share on WhatsApp
           </a>
           <Link className="btn btn-primary" to={`/invite/${eventUrl}`}>
-            Open invitation
+            Open invitation <FiExternalLink />
           </Link>
           <Link className="btn btn-ghost" to={`/edit/${eventUrl}`}>
             <FiEdit3 /> Edit invitation
           </Link>
         </div>
+
+        {/* live look at what guests receive */}
+        {Tpl && (
+          <div className="checkout-preview" style={{ marginTop: 28 }} aria-hidden="true">
+            <PreviewFrame className="mini-pf" title="Your live invitation">
+              <Tpl data={event} />
+            </PreviewFrame>
+          </div>
+        )}
+
         <p className="hint" style={{ textAlign: 'center', marginTop: 16 }}>
           Made a typo? Edits are free anytime — the link never changes, guests always see the latest version.
         </p>

@@ -1,17 +1,17 @@
 // Helpers for "sample data everywhere": the live preview starts filled
 // with the event type's sample payload, and each field flips to the
 // user's own value the moment they type it.
- 
+
 const hasText = (v) => String(v ?? '').trim().length > 0
- 
+
 export function filledOnly(list) {
   return (list || []).filter(item => Object.values(item || {}).some(hasText))
 }
- 
+
 export function listHasContent(list) {
   return filledOnly(list).length > 0
 }
- 
+
 /** Preview payload: user's data wherever present, sample data everywhere else. */
 export function mergeForPreview(data, sample) {
   if (!sample) return data
@@ -31,7 +31,7 @@ export function mergeForPreview(data, sample) {
     blank_html: hasText(data.blank_html) ? data.blank_html : sample.blank_html,
   }
 }
- 
+
 /** For edit mode: make sure every list has at least one row so the form renders. */
 export function normalizePayload(event, empty) {
   const withRows = (list, fallback) => (list && list.length ? list : fallback)

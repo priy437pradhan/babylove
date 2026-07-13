@@ -78,7 +78,8 @@ export default function Home() {
         /* --- hero entrance: masked word reveal + staggered elements --- */
         gsap.set('.word', { yPercent: 115 })
         const tl = gsap.timeline({ defaults: { ease: 'power4.out' } })
-        tl.from('.hero-eyebrow', { y: 16, autoAlpha: 0, duration: 0.7 }, 0.05)
+        tl.from('.hero-cute', { scale: 0, rotate: 40, autoAlpha: 0, duration: 0.7, ease: 'back.out(2.2)' }, 0)
+          .from('.hero-eyebrow', { y: 16, autoAlpha: 0, duration: 0.7 }, 0.05)
           .to('.word', { yPercent: 0, duration: 1.1, stagger: 0.07 }, 0.15)
           .from('.hero-lede', { y: 26, autoAlpha: 0, duration: 0.8 }, '-=0.7')
           .from('.hero-actions .btn', { y: 18, autoAlpha: 0, stagger: 0.1, duration: 0.55 }, '-=0.55')
@@ -87,11 +88,13 @@ export default function Home() {
           .from('.phone-shell', { y: 90, rotate: 9, autoAlpha: 0, duration: 1.3, ease: 'expo.out' }, 0.35)
           .from('.phone-caption', { autoAlpha: 0, duration: 0.6 }, '-=0.6')
 
-        /* --- phone parallax while the hero scrolls away --- */
-        gsap.to('.hero-phone-wrap', {
-          y: -46, ease: 'none',
-          scrollTrigger: { trigger: '.hero-light', start: 'top top', end: 'bottom top', scrub: true },
-        })
+        /* --- phone parallax while the hero scrolls away (desktop only) --- */
+        if (desktop) {
+          gsap.to('.hero-phone-wrap', {
+            y: -46, ease: 'none',
+            scrollTrigger: { trigger: '.hero-light', start: 'top top', end: 'bottom top', scrub: true },
+          })
+        }
 
         /* --- count-up stats --- */
         gsap.utils.toArray('.count-num').forEach(el => {
@@ -103,20 +106,21 @@ export default function Home() {
           })
         })
 
-        /* --- section headings rise in on scroll --- */
-        gsap.utils.toArray('.reveal').forEach(el => {
-          gsap.from(el, {
-            y: 34, autoAlpha: 0, duration: 0.9, ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 86%', once: true },
+        /* --- scroll reveals: DESKTOP ONLY. On mobile nothing is ever
+               hidden waiting for a trigger — content is simply there. --- */
+        if (desktop) {
+          gsap.utils.toArray('.reveal').forEach(el => {
+            gsap.from(el, {
+              y: 34, autoAlpha: 0, duration: 0.9, ease: 'power3.out',
+              scrollTrigger: { trigger: el, start: 'top 86%', once: true },
+            })
           })
-        })
-
-        /* --- cards stagger up on scroll (static sections) --- */
-        gsap.set('.stagger-item', { y: 44, autoAlpha: 0 })
-        ScrollTrigger.batch('.stagger-item', {
-          start: 'top 90%', once: true,
-          onEnter: els => gsap.to(els, { y: 0, autoAlpha: 1, stagger: 0.09, duration: 0.8, ease: 'power3.out' }),
-        })
+          gsap.set('.stagger-item', { y: 44, autoAlpha: 0 })
+          ScrollTrigger.batch('.stagger-item', {
+            start: 'top 90%', once: true,
+            onEnter: els => gsap.to(els, { y: 0, autoAlpha: 1, stagger: 0.09, duration: 0.8, ease: 'power3.out' }),
+          })
+        }
 
         /* --- journey line draws itself as you scroll --- */
         if (desktop) {
@@ -131,11 +135,13 @@ export default function Home() {
           }
         }
 
-        /* --- CTA band: gentle zoom-in --- */
-        gsap.from('.cta-band', {
-          scale: 0.96, autoAlpha: 0, duration: 0.9, ease: 'power3.out',
-          scrollTrigger: { trigger: '.cta-band', start: 'top 88%', once: true },
-        })
+        /* --- CTA band: gentle zoom-in (desktop only) --- */
+        if (desktop) {
+          gsap.from('.cta-band', {
+            scale: 0.96, autoAlpha: 0, duration: 0.9, ease: 'power3.out',
+            scrollTrigger: { trigger: '.cta-band', start: 'top 88%', once: true },
+          })
+        }
 
         /* --- magnetic buttons (desktop pointers only) --- */
         const cleanups = []
@@ -167,7 +173,7 @@ export default function Home() {
   useEffect(() => {
     if (!types) return
     const mm = gsap.matchMedia(rootRef)
-    mm.add('(prefers-reduced-motion: no-preference)', () => {
+    mm.add('(prefers-reduced-motion: no-preference) and (min-width: 840px)', () => {
       gsap.set('.event-card', { y: 44, autoAlpha: 0 })
       ScrollTrigger.batch('.event-card', {
         start: 'top 90%', once: true,
@@ -183,12 +189,13 @@ export default function Home() {
   const heroMeta = getTemplateMeta('marriage', heroKey)
 
   return (
-    <main className="page home-page" ref={rootRef}>
+    <main className="home-page" ref={rootRef}>
 
       {/* ================= hero ================= */}
       <section className="hero-light">
         <div className="hero-inner">
           <div className="hero-copy">
+            <div className="hero-cute" aria-hidden="true">💌</div>
             <p className="eyebrow-ui hero-eyebrow"><FiZap style={{ verticalAlign: '-2px' }} /> Digital invitations, made in minutes</p>
             <h1>
               {TITLE_WORDS.map((w, i) => (
@@ -245,6 +252,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <div className="page home-sections">
 
       {/* ================= occasions marquee ================= */}
       <div className="marquee marquee-strip" aria-hidden="true">
@@ -346,6 +355,8 @@ export default function Home() {
         <p>Create it now, share it tonight — guests open it right inside WhatsApp.</p>
         <a href="#occasions" className="btn btn-gold magnetic">Create my invitation <FiHeart /></a>
       </section>
+
+      </div>{/* /.home-sections */}
 
     </main>
   )

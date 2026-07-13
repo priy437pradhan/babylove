@@ -20,10 +20,10 @@
 //                                                         URL in image_url instead of the data: URL
 // ============================================================
 import { mockApi } from './mock'
- 
+
 const USE_MOCK = true
 const BASE_URL = 'http://localhost:5001' // your Django server
- 
+
 async function http(path, options = {}) {
   const res = await fetch(`${BASE_URL}${path}`, {
     headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
@@ -38,7 +38,7 @@ async function http(path, options = {}) {
   }
   return body
 }
- 
+
 const realApi = {
   getEventTypes: () => http('/api/event-types'),
   getTemplates: (eventTypeKey) => http(`/api/event-types/${eventTypeKey}/templates`),
@@ -49,5 +49,5 @@ const realApi = {
   createPaymentOrder: (slug) => http(`/api/events/${slug}/payment/order`, { method: 'POST' }),
   verifyPayment: (slug, data) => http(`/api/events/${slug}/payment/verify`, { method: 'POST', body: JSON.stringify(data) }),
 }
- 
+
 export const api = USE_MOCK ? mockApi : realApi

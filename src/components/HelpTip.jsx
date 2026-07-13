@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { FiHelpCircle, FiX } from 'react-icons/fi'
- 
+
 /**
  * Little "?" badge that opens a step-by-step guide popover.
  * Usage: <HelpTip title="How to get a Google Maps link" steps={[...]} />
@@ -8,7 +8,7 @@ import { FiHelpCircle, FiX } from 'react-icons/fi'
 export default function HelpTip({ title, steps = [], note }) {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
- 
+
   useEffect(() => {
     if (!open) return
     const onDoc = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false) }
@@ -20,7 +20,7 @@ export default function HelpTip({ title, steps = [], note }) {
       document.removeEventListener('keydown', onKey)
     }
   }, [open])
- 
+
   return (
     <span className="helptip" ref={ref}>
       <button

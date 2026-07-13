@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { FiEdit3, FiLock } from 'react-icons/fi'
 import { api } from '../api/client'
 import { getTemplateMeta, getEventType } from '../config/eventTypes'
- 
+import { resolveTemplate } from '../templates/registry'
+import PreviewFrame from '../components/PreviewFrame'
+
 /**
  * Mock checkout. With the real backend + Razorpay:
  *   1. POST /api/events/:slug/payment/order  -> { order_id, amount, currency }
@@ -24,11 +27,11 @@ export default function Checkout() {
   const [event, setEvent] = useState(null)
   const [error, setError] = useState(null)
   const [paying, setPaying] = useState(false)
- 
+
   useEffect(() => {
     api.getEventByUrl(eventUrl).then(setEvent).catch(e => setError(e.message))
   }, [eventUrl])
- 
+
   const pay = async () => {
     setPaying(true)
     setError(null)
@@ -43,7 +46,7 @@ export default function Checkout() {
       setPaying(false)
     }
   }
- 
+
   if (error && !event) {
     return (
       <main className="page page-narrow invite-notfound">
@@ -56,32 +59,42 @@ export default function Checkout() {
   if (!event) {
     return <main className="page"><div className="loading-block"><span className="spinner spinner-dark" /> Loading…</div></main>
   }
- 
+
   const meta = getTemplateMeta(event.event_type_key, event.template_type_key)
   const type = getEventType(event.event_type_key)
- 
+  const Tpl = resolveTemplate(event.event_type_key, event.template_type_key)
+
   return (
     <main className="page page-narrow">
       <p className="eyebrow-ui">Almost there</p>
       <h1 className="page-title">Review & pay</h1>
       <p className="page-lede">Your invitation goes live the moment payment completes.</p>
- 
+
+      {/* what the guests will see — their real data */}
+      {Tpl && (
+        <div className="checkout-preview" aria-hidden="true">
+          <PreviewFrame className="mini-pf" title="Your invitation preview">
+            <Tpl data={event} />
+          </PreviewFrame>
+        </div>
+      )}
+
       <div className="pay-card">
         <div className="pay-row"><span>Event</span><b>{event.event_name}</b></div>
         <div className="pay-row"><span>Occasion</span><b>{type?.icon} {type?.name}</b></div>
         <div className="pay-row"><span>Template</span><b>{meta?.name}</b></div>
         <div className="pay-row"><span>Your link</span><b>/invite/{event.event_url}</b></div>
         <div className="pay-row"><span className="pay-total">Total</span><span className="pay-total">₹{meta?.price}</span></div>
- 
+
         {error && <p className="error-note">{error}</p>}
- 
-        <div style={{ display: 'flex', gap: 12, marginTop: 20, flexWrap: 'wrap' }}>
+
+        <div className="pay-actions">
           <button className="btn btn-gold" onClick={pay} disabled={paying}>
-            {paying && <span className="spinner" style={{ borderTopColor: '#3a2408' }} />}
-            {paying ? 'Processing payment…' : `Pay ₹${meta?.price}`}
+            {paying && <span className="spinner" style={{ borderTopColor: '#2a1f07' }} />}
+            {paying ? 'Processing payment…' : <>Pay ₹{meta?.price} <FiLock /></>}
           </button>
           <Link className="btn btn-ghost" to={`/edit/${event.event_url}`}>
-            Edit details
+            <FiEdit3 /> Edit details
           </Link>
         </div>
         <p className="pay-note">

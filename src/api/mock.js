@@ -4,9 +4,9 @@
 // flipping USE_MOCK in client.js is the only change needed.
 // ============================================================
 import { EVENT_TYPES, TEMPLATES, getTemplateMeta } from '../config/eventTypes'
- 
+
 const STORE_KEY = 'nimantran_events'
- 
+
 const read = () => {
   try { return JSON.parse(localStorage.getItem(STORE_KEY) || '{}') } catch { return {} }
 }
@@ -20,24 +20,24 @@ const write = (db) => {
   }
 }
 const delay = (ms = 350) => new Promise(r => setTimeout(r, ms))
- 
+
 export const mockApi = {
   async getEventTypes() {
     await delay()
     return EVENT_TYPES
   },
- 
+
   async getTemplates(eventTypeKey) {
     await delay()
     return TEMPLATES[eventTypeKey] || []
   },
- 
+
   async checkSlug(slug) {
     await delay(200)
     const db = read()
     return { available: !db[slug] || db[slug].status !== 'published' }
   },
- 
+
   // payload = the full event JSON (event_type_key, template_type_key, event_url, ...)
   async createEvent(payload) {
     await delay()
@@ -57,7 +57,7 @@ export const mockApi = {
     write(db)
     return { event_url: payload.event_url, status: 'draft' }
   },
- 
+
   // Edit after creation — works for drafts AND published events.
   // Keeps status/payment/link intact; only the content changes.
   async updateEvent(slug, payload) {
@@ -77,7 +77,7 @@ export const mockApi = {
     write(db)
     return { event_url: slug, status: db[slug].status }
   },
- 
+
   async getEventByUrl(slug) {
     await delay()
     const db = read()
@@ -88,7 +88,7 @@ export const mockApi = {
     }
     return db[slug]
   },
- 
+
   async createPaymentOrder(slug) {
     await delay(500)
     const db = read()
@@ -101,7 +101,7 @@ export const mockApi = {
       currency: 'INR',
     }
   },
- 
+
   async verifyPayment(slug, { order_id }) {
     await delay(800)
     const db = read()

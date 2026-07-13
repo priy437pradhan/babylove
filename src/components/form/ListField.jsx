@@ -1,5 +1,5 @@
 import ImageInput from './ImageInput'
- 
+
 /**
  * Repeatable group of fields — drives participants, family_members,
  * primary_image, other_image, when_where and messages. Fully generic:
@@ -24,17 +24,17 @@ export default function ListField({
   }
   const add = () => onChange([...items, { ...emptyItem }])
   const remove = (idx) => onChange(items.filter((_, i) => i !== idx))
- 
+
   const hasImage = fields.some(f => f.type === 'image')
   const cols = hasImage ? '' : fields.length === 2 ? 'cols-2' : fields.length >= 3 ? 'cols-3' : ''
- 
+
   return (
     <div className="form-section">
       <div className="form-section-head">
         <h2 className="form-section-title">{title}{labelExtra}</h2>
         {subtitle && <span className="form-section-sub">{subtitle}</span>}
       </div>
- 
+
       {items.map((item, idx) => (
         <div className="list-item" key={idx}>
           {items.length > minItems && (
@@ -85,7 +85,7 @@ export default function ListField({
           </div>
         </div>
       ))}
- 
+
       <button type="button" className="add-item" onClick={add}>+ {addLabel}</button>
     </div>
   )

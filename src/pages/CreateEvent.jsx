@@ -10,14 +10,15 @@ import { mergeForPreview, normalizePayload } from '../utils/merge'
 import { Field } from '../components/form/Field'
 import ListField from '../components/form/ListField'
 import HelpTip from '../components/HelpTip'
- 
+import PreviewFrame from '../components/PreviewFrame'
+
 const MAP_STEPS = [
   'Open Google Maps and search your venue (e.g. "Shree Palace Bhubaneswar").',
   'Tap the venue name, then tap the Share button.',
   'Choose "Copy link".',
   'Come back here and paste it in this box.',
 ]
- 
+
 /**
  * One page, two modes:
  *  - create:  /create/:eventTypeKey/:templateTypeKey  (blank form → checkout)
@@ -26,7 +27,7 @@ const MAP_STEPS = [
 export default function CreateEvent({ editMode = false }) {
   const params = useParams()
   const navigate = useNavigate()
- 
+
   const [existing, setExisting] = useState(null)   // loaded event in edit mode
   const [loadError, setLoadError] = useState(null)
   const [data, setData] = useState(() =>
@@ -38,7 +39,7 @@ export default function CreateEvent({ editMode = false }) {
   const [submitError, setSubmitError] = useState(null)
   const [showMobilePreview, setShowMobilePreview] = useState(false)
   const [showSample, setShowSample] = useState(!editMode) // sample fill-ins on for new events
- 
+
   // load the event when editing
   useEffect(() => {
     if (!editMode) return
@@ -49,10 +50,10 @@ export default function CreateEvent({ editMode = false }) {
       })
       .catch(e => setLoadError(e.message))
   }, [editMode, params.eventUrl])
- 
+
   const eventTypeKey = editMode ? existing?.event_type_key : params.eventTypeKey
   const templateTypeKey = editMode ? existing?.template_type_key : params.templateTypeKey
- 
+
   const eventType = getEventType(eventTypeKey)
   const templateMeta = getTemplateMeta(eventTypeKey, templateTypeKey)
   const Template = resolveTemplate(eventTypeKey, templateTypeKey)
@@ -61,7 +62,7 @@ export default function CreateEvent({ editMode = false }) {
     () => (eventTypeKey ? getSample(eventTypeKey, templateTypeKey) : null),
     [eventTypeKey, templateTypeKey]
   )
- 
+
   if (editMode && loadError) {
     return (
       <main className="page invite-notfound">
@@ -82,10 +83,10 @@ export default function CreateEvent({ editMode = false }) {
       </main>
     )
   }
- 
+
   const setField = (name, value) => setData(d => ({ ...d, [name]: value }))
   const setList = (name) => (items) => setData(d => ({ ...d, [name]: items }))
- 
+
   const onNameChange = (value) => {
     setData(d => ({
       ...d,
@@ -93,7 +94,7 @@ export default function CreateEvent({ editMode = false }) {
       event_url: editMode || slugTouched ? d.event_url : slugify(value),
     }))
   }
- 
+
   const validate = () => {
     const e = {}
     if (!data.event_name.trim()) e.event_name = 'Give your event a name'
@@ -105,7 +106,7 @@ export default function CreateEvent({ editMode = false }) {
     setErrors(e)
     return Object.keys(e).length === 0
   }
- 
+
   const cleanPayload = () => ({
     ...data,
     participants: data.participants.filter(p => p.name.trim()),
@@ -115,7 +116,7 @@ export default function CreateEvent({ editMode = false }) {
     when_where: data.when_where.filter(w => w.title.trim()),
     messages: data.messages.filter(m => m.what.trim()),
   })
- 
+
   const onSubmit = async () => {
     setSubmitError(null)
     if (!validate()) {
@@ -138,17 +139,17 @@ export default function CreateEvent({ editMode = false }) {
       setSubmitting(false)
     }
   }
- 
+
   // preview: user's data wherever typed, sample data everywhere else (toggleable)
   const previewData = showSample && sample ? mergeForPreview(data, sample) : data
- 
+
   const SampleToggle = (
     <label className="preview-toggle">
       <input type="checkbox" checked={showSample} onChange={e => setShowSample(e.target.checked)} />
       Fill gaps with sample data
     </label>
   )
- 
+
   return (
     <main className="page">
       <p className="eyebrow-ui">{eventType.icon} {eventType.name} · {templateMeta.name} template</p>
@@ -158,9 +159,9 @@ export default function CreateEvent({ editMode = false }) {
           ? 'Change anything — your link stays the same and updates instantly for guests.'
           : 'Everything updates live in the preview — nothing is published until you pay.'}
       </p>
- 
+
       {submitError && <p className="error-note">{submitError}</p>}
- 
+
       <div className="create-layout">
         {/* ---------------- form column ---------------- */}
         <div>
@@ -195,7 +196,7 @@ export default function CreateEvent({ editMode = false }) {
                     : 'Auto-filled from the event name — edit it if you like.'}</p>}
             </div>
           </div>
- 
+
           <ListField
             listId="participants"
             title={schema.labels.participants}
@@ -210,7 +211,7 @@ export default function CreateEvent({ editMode = false }) {
               { name: 'name', label: 'Name', placeholder: 'Full name' },
             ]}
           />
- 
+
           <ListField
             listId="family"
             title={schema.labels.family}
@@ -223,7 +224,7 @@ export default function CreateEvent({ editMode = false }) {
               { name: 'name', label: 'Name', placeholder: 'Full name' },
             ]}
           />
- 
+
           <ListField
             listId="primary"
             title={schema.labels.primaryImages}
@@ -237,7 +238,7 @@ export default function CreateEvent({ editMode = false }) {
               { name: 'image_url', label: 'Photo', type: 'image' },
             ]}
           />
- 
+
           <ListField
             listId="other"
             title={schema.labels.otherImages}
@@ -251,7 +252,7 @@ export default function CreateEvent({ editMode = false }) {
               { name: 'image_url', label: 'Photo', type: 'image' },
             ]}
           />
- 
+
           <ListField
             listId="when"
             title={schema.labels.whenWhere}
@@ -265,7 +266,7 @@ export default function CreateEvent({ editMode = false }) {
               { name: 'time', label: 'Date & time', placeholder: schema.placeholders.when_time },
             ]}
           />
- 
+
           <div className="form-section">
             <div className="form-section-head">
               <h2 className="form-section-title"><FiMapPin style={{ verticalAlign: '-2px' }} /> Map & extras</h2>
@@ -294,7 +295,7 @@ export default function CreateEvent({ editMode = false }) {
               onChange={e => setField('blank_html', e.target.value)}
             />
           </div>
- 
+
           <ListField
             listId="messages"
             title={schema.labels.messages}
@@ -307,7 +308,7 @@ export default function CreateEvent({ editMode = false }) {
               { name: 'what', label: 'Message', placeholder: 'Your presence is the greatest gift to us.', textarea: true },
             ]}
           />
- 
+
           <div className="form-footer">
             {editMode ? (
               <Link to={`/invite/${params.eventUrl}`} className="btn btn-ghost"><FiArrowLeft /> Back to invitation</Link>
@@ -320,17 +321,19 @@ export default function CreateEvent({ editMode = false }) {
             </button>
           </div>
         </div>
- 
+
         {/* ---------------- desktop live preview ---------------- */}
         <aside className="preview-pane" aria-label="Live preview">
           <p className="preview-label">Live preview</p>
           {SampleToggle}
           <div className="preview-frame">
-            <Template data={previewData} />
+            <PreviewFrame className="pane-pf" title="Live preview">
+              <Template data={previewData} />
+            </PreviewFrame>
           </div>
         </aside>
       </div>
- 
+
       {/* ---------------- mobile preview ---------------- */}
       <div className="mobile-preview-bar">
         <button className="btn btn-ghost btn-sm" onClick={() => setShowMobilePreview(true)}>
@@ -340,7 +343,7 @@ export default function CreateEvent({ editMode = false }) {
           {submitting ? 'Saving…' : editMode ? 'Save changes' : `Pay ₹${templateMeta.price}`}
         </button>
       </div>
- 
+
       {showMobilePreview && (
         <div className="mobile-preview-overlay">
           <div className="mobile-preview-close">

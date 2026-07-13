@@ -7,13 +7,13 @@ import Checkout from './pages/Checkout'
 import Success from './pages/Success'
 import Invitation from './pages/Invitation'
 import NotFound from './pages/NotFound'
- 
+
 export default function App() {
   return (
     <Routes>
       {/* Public invitation page — no site chrome, the template owns the screen */}
       <Route path="/invite/:eventUrl" element={<Invitation />} />
- 
+
       {/* Platform pages */}
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />

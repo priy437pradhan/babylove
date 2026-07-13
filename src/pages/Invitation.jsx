@@ -6,6 +6,7 @@ import { resolveTemplate } from '../templates/registry'
 /**
  * The public guest-facing page: /invite/:eventUrl
  * Fetches the payload and renders whichever template it names.
+ * Templates own the full screen — the site theme does not apply here.
  */
 export default function Invitation() {
   const { eventUrl } = useParams()
